@@ -1,0 +1,58 @@
+# Python
+*.pyc
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media
+
+# Entorno virtual
+venv/
+env/
+.env
+
+# IDEs y editores
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de dependencias
+/node_modules
+
+# Archivos de compilación
+*.mo
+*.pot
+
+# Archivos de cobertura
+htmlcov/
+.coverage
+.coverage.*
+.cache
+
+# Archivos de pytest
+.pytest_cache/
+
+# Archivos de mypy
+.mypy_cache/
+
+# Archivos de distribución
+dist/
+build/
+*.egg-info/
+
+# Archivos de documentación
+docs/_build/
+
+# Archivos de Celery
+celerybeat-schedule
+celerybeat.pid
