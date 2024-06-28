@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import RegisterForm, LoginForm
+from django.contrib import messages
 
 # Create your views here.
 
@@ -13,9 +14,6 @@ def productos(request):
 
 def nosotros(request):
     return render(request, 'nosotros.html')
-
-def login(request):
-    return render(request, 'login.html')
 
 def auth_view(request):
     login_form = LoginForm()
@@ -29,18 +27,16 @@ def auth_view(request):
                 login(request, user)
                 return redirect('index')
             else:
-                print(login_form.errors)  # Agrega esta línea para depurar errores de inicio de sesión
+                messages.error(request, 'Error en el inicio de sesión. Por favor, verifica tus credenciales.')
         elif 'register' in request.POST:
             register_form = RegisterForm(request.POST)
             if register_form.is_valid():
                 user = register_form.save()
-                username = register_form.cleaned_data.get('username')
-                raw_password = register_form.cleaned_data.get('password1')
-                user = authenticate(username=username, password=raw_password)
-                if user is not None:
-                    login(request, user)
-                    return redirect('index')
+                login(request, user)
+                messages.success(request, 'Registro exitoso. Bienvenido!')
+                return redirect('index')
             else:
-                print(register_form.errors)  # Agrega esta línea para depurar errores de registro
+                print(register_form.errors)  # Imprimir errores del formulario en la consola
+                messages.error(request, 'Error en el registro. Por favor, corrige los errores.')
 
     return render(request, 'auth.html', {'login_form': login_form, 'register_form': register_form})
