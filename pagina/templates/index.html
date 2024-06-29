@@ -6,6 +6,7 @@
     <title>Tienda de Mascotas</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <style>
         .navbar-custom {
             background-color: #000000;
@@ -20,25 +21,25 @@
         .navbar-custom .navbar-toggler-icon {
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.55%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
         }
+        .intro-section {
+            padding: 100px 0; /* Adjust padding as needed */
+        }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-custom">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'index' %}">Tienda de Mascotas</a>
+            <a class="navbar-brand" href="{% url 'index' %}">Puppy Pals</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'index' %}">Inicio</a>
+                        <a class="nav-link" href="{% url 'index' %}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'productos' %}">Productos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'nosotros' %}">Nosotros</a>
+                        <a class="nav-link" href="{% url 'productos' %}">Product Us</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav ms-auto">
@@ -61,17 +62,78 @@
                             <a href="{% url 'auth' %}" class="btn btn-outline-light">Login</a>
                         </li>
                     {% endif %}
+                    <li class="nav-item">
+                        <a href="{% url 'cart' %}" class="nav-link">
+                            <i class="bi bi-cart"></i>
+                            <span class="badge bg-secondary"></span> <!-- Placeholder for cart item count -->
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container mt-4">
-        <h1>Bienvenido a nuestra Tienda de Mascotas</h1>
-        <p>Aquí encontrarás todo lo que necesitas para tu mascota.</p>
+    <div class="container intro-section text-center">
+        <h1>Puppy Pals Products</h1>
+        <p>Puppy Pals is a leading provider of high-quality products for your furry friends. We offer a wide range of toys, grooming supplies, and accessories to keep your pups happy and healthy.</p>
     </div>
+
+    <div class="container mt-4">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+            <div class="col">
+                <div class="card h-100">
+                    <img src="path/to/image.jpg" class="card-img-top" alt="Puppy Chew Toy">
+                    <div class="card-body">
+                        <h5 class="card-title">Puppy Chew Toy</h5>
+                        <p class="card-text">Durable and safe chew toy for your pup.</p>
+                        <p class="card-text">$12.99</p>
+                        <a href="#" class="btn btn-dark">Add to Cart</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <img src="path/to/image.jpg" class="card-img-top" alt="Puppy Grooming Kit">
+                    <div class="card-body">
+                        <h5 class="card-title">Puppy Grooming Kit</h5>
+                        <p class="card-text">Everything you need to keep your pup looking their best.</p>
+                        <p class="card-text">$24.99</p>
+                        <a href="#" class="btn btn-dark">Add to Cart</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <img src="path/to/image.jpg" class="card-img-top" alt="Puppy Training Treats">
+                    <div class="card-body">
+                        <h5 class="card-title">Puppy Training Treats</h5>
+                        <p class="card-text">Healthy and delicious treats to reward your pup.</p>
+                        <p class="card-text">$9.99</p>
+                        <a href="#" class="btn btn-dark">Add to Cart</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <img src="path/to/image.jpg" class="card-img-top" alt="Puppy Bed">
+                    <div class="card-body">
+                        <h5 class="card-title">Puppy Bed</h5>
+                        <p class="card-text">Cozy and comfortable bed for your furry friend.</p>
+                        <p class="card-text">$39.99</p>
+                        <a href="#" class="btn btn-dark">Add to Cart</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center mt-5">
+        <p>&copy; 2023 Puppy Pals. All rights reserved.</p>
+        <p><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+    </footer>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+ß
