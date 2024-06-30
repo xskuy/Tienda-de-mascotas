@@ -4,6 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from .forms import RegisterForm, LoginForm
 from django.contrib import messages
 from .forms import ProductoForm
+from .models import Producto
 
 # Create your views here.
 
@@ -57,3 +58,9 @@ def agregar_producto_view(request):
     else:
         form = ProductoForm()
     return render(request, 'agregar_producto.html', {'form': form})
+
+
+def productos_view(request):
+    productos = Producto.objects.all()
+    return render(request, 'productos.html', {'productos': productos})
+    
