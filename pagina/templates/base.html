@@ -3,11 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agregar Producto</title>
+    <title>{% block title %}Tienda de Mascotas{% endblock %}</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    {% block extra_head %}
+    <!-- Aquí puedes incluir estilos adicionales específicos de cada plantilla -->
+    {% endblock %}
     <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        .content {
+            flex: 1;
+        }
         .navbar-custom {
             background-color: #000000;
         }
@@ -20,6 +34,21 @@
         }
         .navbar-custom .navbar-toggler-icon {
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.55%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+        .intro-section {
+            padding: 100px 0; /* Adjust padding as needed */
+        }
+        .footer {
+            background-color: #000000;
+            color: #ffffff;
+            padding: 20px 0;
+        }
+        .footer a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -60,9 +89,18 @@
                         </li>
                     {% endif %}
                     <li class="nav-item">
-                        <a href="{% url 'view_cart' %}" class="nav-link">
+                        <a href="{% url 'view_cart' %}" class="nav-link position-relative">
                             <i class="bi bi-cart"></i>
-                            <span class="badge bg-secondary"></span> <!-- Placeholder for cart item count -->
+                            {% if request.user.is_authenticated %}
+                                {% with request.user.cart.cartitem_set.count as cart_count %}
+                                    {% if cart_count > 0 %}
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                        {{ cart_count }}
+                                        <span class="visually-hidden">items in cart</span>
+                                    </span>
+                                    {% endif %}
+                                {% endwith %}
+                            {% endif %}
                         </a>
                     </li>
                 </ul>
@@ -70,31 +108,37 @@
         </div>
     </nav>
 
-    <div class="container mt-5">
-        <h1>Agregar Producto</h1>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label for="id_nombre" class="form-label">Nombre</label>
-                {{ form.nombre }}
-            </div>
-            <div class="mb-3">
-                <label for="id_descripcion" class="form-label">Descripción</label>
-                {{ form.descripcion }}
-            </div>
-            <div class="mb-3">
-                <label for="id_precio" class="form-label">Precio</label>
-                {{ form.precio }}
-            </div>
-            <div class="mb-3">
-                <label for="id_imagen" class="form-label">Imagen</label>
-                {{ form.imagen }}
-            </div>
-            <button type="submit" class="btn btn-primary">Agregar Producto</button>
-        </form>
+    <!-- Mensajes de alerta -->
+    {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
     </div>
+    {% endif %}
+
+    <!-- Contenido principal -->
+    <div class="container content">
+        {% block content %}
+        <!-- El contenido específico de cada plantilla se insertará aquí -->
+        {% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer mt-auto py-3">
+        <div class="container text-center">
+            <p>&copy; 2023 Puppy Pals. All rights reserved.</p>
+            <p><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+        </div>
+    </footer>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}
+    <!-- Aquí puedes incluir scripts adicionales específicos de cada plantilla -->
+    {% endblock %}
 </body>
 </html>

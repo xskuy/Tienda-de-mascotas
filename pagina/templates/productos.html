@@ -1,110 +1,34 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Productos</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .navbar-custom {
-            background-color: #000000;
-        }
-        .navbar-custom .navbar-brand,
-        .navbar-custom .nav-link {
-            color: #ffffff;
-        }
-        .navbar-custom .nav-link:hover {
-            color: #cccccc;
-        }
-        .navbar-custom .navbar-toggler-icon {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.55%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-        }
-        .intro-section {
-            padding: 100px 0; /* Adjust padding as needed */
-        }
-        .card-img-top {
-            height: 200px; /* Set the desired height */
-            object-fit: cover; /* Ensure the image covers the area without stretching */
-        }
-    </style>
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-custom">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'index' %}">Puppy Pals</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'index' %}">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'productos' %}">Product Us</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav ms-auto">
-                    {% if user.is_authenticated %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                {{ user.username }}
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li>
-                                    <form id="logout-form" method="post" action="{% url 'logout' %}">
-                                        {% csrf_token %}
-                                        <button type="submit" class="dropdown-item">Logout</button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a href="{% url 'auth' %}" class="btn btn-outline-light">Login</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
+{% extends 'base.html' %}
 
-    <div class="container mt-5">
-        <h1>Productos</h1>
-        <a href="{% url 'agregar_producto' %}" class="btn btn-dark mb-3">Agregar Producto</a>
-        <div class="row">
-            <!-- Aquí van las tarjetas de productos -->
-            <div class="container mt-4" style="padding: 50px;">
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
-                    {% if productos %}
-                        {% for producto in productos %}
-                        <div class="col">
-                            <div class="card h-100">
-                                {% if producto.imagen %}
-                                <img src="{{ producto.imagen.url }}" class="card-img-top" alt="{{ producto.nombre }}">
-                                {% else %}
-                                <img src="path/to/default-image.jpg" class="card-img-top" alt="Default Image">
-                                {% endif %}
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ producto.nombre }}</h5>
-                                    <p class="card-text">{{ producto.descripcion }}</p>
-                                    <p class="card-text">${{ producto.precio }}</p>
-                                    <a href="#" class="btn btn-dark">Add to Cart</a>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
+{% block title %}Productos - Tienda de Mascotas{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Productos</h1>
+    {% if user.is_authenticated %}
+    <a href="{% url 'agregar_producto' %}" class="btn btn-dark mb-3">Agregar Producto</a>
+    {% endif %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+        {% if productos %}
+            {% for producto in productos %}
+            <div class="col">
+                <div class="card h-100">
+                    {% if producto.imagen %}
+                    <img src="{{ producto.imagen.url }}" class="card-img-top" style="aspect-ratio: 1/1;" alt="{{ producto.nombre }}">
                     {% else %}
-                        <p>No hay productos disponibles.</p>
                     {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ producto.nombre }}</h5>
+                        <p class="card-text">{{ producto.descripcion }}</p>
+                        <p class="card-text">${{ producto.precio }}</p>
+                        <a href="{% url 'add_to_cart' producto.id %}" class="btn btn-dark">Agregar al Carrito</a>
+                    </div>
                 </div>
             </div>
-        </div>
+            {% endfor %}
+        {% else %}
+            <p>No hay productos disponibles.</p>
+        {% endif %}
     </div>
-  
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+</div>
+{% endblock %}

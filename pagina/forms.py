@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .models import Producto
+from .models import CartItem
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -39,4 +40,13 @@ class ProductoForm(forms.ModelForm):
             'descripcion': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'precio': forms.NumberInput(attrs={'class': 'form-control'}),
             'imagen': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        }
+
+
+class AddToCartForm(forms.ModelForm):
+    class Meta:
+        model = CartItem
+        fields = ['quantity']
+        widgets = {
+            'quantity': forms.NumberInput(attrs={'class': 'form-control', 'min': '1'})
         }
