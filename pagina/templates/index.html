@@ -2,19 +2,50 @@
 
 {% block title %}Inicio - Tienda de Mascotas{% endblock %}
 
-{% load static %}  <!-- Carga la etiqueta static -->
+{% load static %}
 
 {% block content %}
-<div class="container intro-section text-center">
-    <h1>Bienvenidos a Puppy Pals</h1>
-    <p style="max-width: 900px; margin: 0 auto;">Puppy Pals es un proveedor líder de productos de alta calidad para tus amigos peludos. Ofrecemos una amplia gama de juguetes, suministros de aseo y accesorios para mantener a tus cachorros felices y saludables.</p>
+<div class="welcome-section">
+    <div class="container mt-5">
+        <h1 class="welcome-title">Bienvenidos a Puppy Pals</h1>
+        <p class="welcome-description">Puppy Pals es un proveedor líder de productos de alta calidad para tus amigos peludos. Ofrecemos una amplia gama de juguetes, suministros de aseo y accesorios para mantener a tus cachorros felices y saludables.</p>
+    </div>
+</div>
+
+<div class="container mt-4 about-container">
+    <h2>Sobre Nosotros</h2>
+    <div class="about-content">
+        <div class="about-text">
+            <p>Puppy Pals se dedica a proporcionar los mejores productos y servicios para mascotas. Con años de experiencia en la industria, nuestro equipo está comprometido a garantizar la satisfacción de nuestros clientes y la salud y felicidad de sus mascotas.</p>
+            <p>En Puppy Pals, creemos que las mascotas son parte de la familia, y nuestra misión es ayudarlas a vivir vidas largas, saludables y felices.</p>
+            <p>Visítanos y descubre por qué somos el lugar favorito de los amantes de las mascotas.</p>
+        </div>
+        <img src="{% static 'images/Dia-mundial-del-perro.jpg' %}" alt="Sobre Nosotros" class="about-image">
+    </div>
 </div>
 
 <div class="container mt-4">
-    <h2>Sobre Nosotros</h2>
-    <p>Puppy Pals se dedica a proporcionar los mejores productos y servicios para mascotas. Con años de experiencia en la industria, nuestro equipo está comprometido a garantizar la satisfacción de nuestros clientes y la salud y felicidad de sus mascotas.</p>
-    <p>En Puppy Pals, creemos que las mascotas son parte de la familia, y nuestra misión es ayudarlas a vivir vidas largas, saludables y felices.</p>
-    <p>Visítanos y descubre por qué somos el lugar favorito de los amantes de las mascotas.</p>
-    <img src="{% static 'images/Dia-mundial-del-perro' %}" class="img-fluid mt-3" alt="Sobre Nosotros">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 justify-content-center">
+        {% if productos %}
+            {% for producto in productos %}
+            <div class="col">
+                <div class="card h-100 d-flex flex-column card-padding">
+                    {% if producto.imagen %}
+                    <img src="{{ producto.imagen.url }}" class="card-img-top" style="aspect-ratio: 1/1;" alt="{{ producto.nombre }}">
+                    {% endif %}
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ producto.nombre }}</h5>
+                        <p class="card-text">{{ producto.descripcion }}</p>
+                        <p class="card-text mt-auto">${{ producto.precio }}</p>
+                        <a href="{% url 'add_to_cart' producto.id %}" class="btn btn-dark mt-3">Agregar al Carrito</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No hay productos disponibles.</p>
+        {% endif %}
+    </div>
 </div>
+
 {% endblock %}

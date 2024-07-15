@@ -14,10 +14,13 @@ class Producto(models.Model):
         return self.nombre
 
 class Cart(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    
+    user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
+    session_key = models.CharField(max_length=40, null=True, blank=True)
+
     def __str__(self):
-        return f"Carrito de {self.user.username}"
+        if self.user:
+            return f"Carrito de {self.user.username}"
+        return f"Carrito de sesión {self.session_key}"
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)

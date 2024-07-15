@@ -14,9 +14,10 @@ urlpatterns = [
     path('productos/agregar/', views.agregar_producto_view, name='agregar_producto'),
     path('cart/add/<int:producto_id>/', views.add_to_cart, name='add_to_cart'),
     path('cart/', views.view_cart, name='view_cart'),
-    path('cart/remove/<int:item_id>/', remove_from_cart, name='remove_from_cart'),
-    path('cart/clear/', clear_cart, name='clear_cart'),
+    path('cart/remove/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
+    path('cart/clear/', views.clear_cart, name='clear_cart'),
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -7,11 +7,15 @@ from .forms import ProductoForm
 from .forms import AddToCartForm
 from .models import Producto, Cart, CartItem
 from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
 
 # Create your views here.
-
 def index(request):
-    return render(request, 'index.html')
+    productos = Producto.objects.all().order_by('-id')[:4]
+    context = {
+        'productos': productos
+    }
+    return render(request, 'index.html', context)
 
 def productos(request):
     return render(request, 'productos.html')
@@ -51,7 +55,6 @@ def cart_view(request):
     return render(request, 'cart.html')
 
 
-@login_required
 def agregar_producto_view(request):
     if request.method == 'POST':
         form = ProductoForm(request.POST, request.FILES)
@@ -68,47 +71,70 @@ def productos_view(request):
     return render(request, 'productos.html', {'productos': productos})
 
 
-@login_required
 def add_to_cart(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
-    cart, created = Cart.objects.get_or_create(user=request.user)
-    
-    if request.method == 'POST':
-        form = AddToCartForm(request.POST)
-        if form.is_valid():
-            quantity = form.cleaned_data['quantity']
-            cart_item, created = CartItem.objects.get_or_create(cart=cart, producto=producto)
-            if not created:
-                cart_item.quantity += quantity
-            else:
-                cart_item.quantity = quantity
-            cart_item.save()
-            messages.success(request, f'Added {quantity} x {producto.nombre} to your cart.')
-            return redirect('productos')
+    if request.user.is_authenticated:
+        cart, created = Cart.objects.get_or_create(user=request.user)
     else:
-        form = AddToCartForm()
+        session_key = request.session.session_key
+        if not session_key:
+            request.session.create()
+            session_key = request.session.session_key
+        cart, created = Cart.objects.get_or_create(session_key=session_key)
+    
+    cart_item, created = CartItem.objects.get_or_create(cart=cart, producto=producto)
+    if not created:
+        cart_item.quantity += 1
+        cart_item.save()
 
-    return render(request, 'add_to_cart.html', {'form': form, 'producto': producto})
+    messages.success(request, f'{producto.nombre} ha sido agregado al carrito.')
+    return redirect('view_cart')
 
-@login_required
+
 def view_cart(request):
-    cart, created = Cart.objects.get_or_create(user=request.user)
-    items = CartItem.objects.filter(cart=cart)
-    
-    total = sum(item.producto.precio * item.quantity for item in items)
-    
-    return render(request, 'view_cart.html', {'items': items, 'total': total})
+    if request.user.is_authenticated:
+        cart, created = Cart.objects.get_or_create(user=request.user)
+    else:
+        session_key = request.session.session_key
+        if not session_key:
+            request.session.create()
+            session_key = request.session.session_key
+        cart, created = Cart.objects.get_or_create(session_key=session_key)
 
-@login_required
+    items = CartItem.objects.filter(cart=cart)
+    total = items.aggregate(total=Sum('producto__precio'))['total'] or 0
+
+    context = {
+        'items': items,
+        'total': total
+    }
+    return render(request, 'view_cart.html', context)
+
 def remove_from_cart(request, item_id):
-    cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
+    if request.user.is_authenticated:
+        cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
+    else:
+        session_key = request.session.session_key
+        if not session_key:
+            request.session.create()
+            session_key = request.session.session_key
+        cart_item = get_object_or_404(CartItem, id=item_id, cart__session_key=session_key)
+    
     cart_item.delete()
     messages.success(request, 'Item removed from cart.')
     return redirect('view_cart')
 
-@login_required
+
 def clear_cart(request):
-    cart, created = Cart.objects.get_or_create(user=request.user)
+    if request.user.is_authenticated:
+        cart, created = Cart.objects.get_or_create(user=request.user)
+    else:
+        session_key = request.session.session_key
+        if not session_key:
+            request.session.create()
+            session_key = request.session.session_key
+        cart, created = Cart.objects.get_or_create(session_key=session_key)
+    
     CartItem.objects.filter(cart=cart).delete()
     messages.success(request, 'All items removed from cart.')
     return redirect('view_cart')

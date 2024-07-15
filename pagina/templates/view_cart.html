@@ -13,7 +13,7 @@
             <span>${{ item.producto.precio|thousand_separator }}</span>
             <form method="post" action="{% url 'remove_from_cart' item.id %}" class="ms-3">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
             </form>
         </li>
         {% empty %}
@@ -31,7 +31,7 @@
         {% if items %}
         <form method="post" action="{% url 'clear_cart' %}" class="d-inline-block ms-3">
             {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Clear Cart</button>
+            <button type="submit" class="btn btn-danger">Limpiar Carrito</button>
         </form>
         {% endif %}
     </div>
